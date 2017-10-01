@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170929220110) do
+ActiveRecord::Schema.define(version: 20170930163855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,9 +19,9 @@ ActiveRecord::Schema.define(version: 20170929220110) do
     t.string "title"
     t.string "description"
     t.string "location"
-    t.string "attendable_type"
-    t.bigint "attendable_id"
     t.bigint "user_id"
+    t.string "attendable_type", null: false
+    t.bigint "attendable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["attendable_type", "attendable_id"], name: "index_CalendarEvents_on_attendable_type_and_attendable_id"
@@ -29,12 +29,11 @@ ActiveRecord::Schema.define(version: 20170929220110) do
   end
 
   create_table "job_steps", force: :cascade do |t|
-    t.bigint "job_id"
     t.bigint "step_id"
     t.boolean "complete"
+    t.integer "users_jobs_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["job_id"], name: "index_job_steps_on_job_id"
     t.index ["step_id"], name: "index_job_steps_on_step_id"
   end
 
@@ -55,11 +54,13 @@ ActiveRecord::Schema.define(version: 20170929220110) do
 
   create_table "notes", force: :cascade do |t|
     t.string "description"
-    t.string "notable_type"
-    t.bigint "notable_id"
+    t.bigint "user_id"
+    t.string "notable_type", null: false
+    t.bigint "notable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["notable_type", "notable_id"], name: "index_notes_on_notable_type_and_notable_id"
+    t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
   create_table "point_categories", force: :cascade do |t|
@@ -115,6 +116,9 @@ ActiveRecord::Schema.define(version: 20170929220110) do
     t.inet "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "provider"
+    t.string "uid"
+    t.string "token"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
